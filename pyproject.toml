@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genascii"
+authors = [{name = "Viet Nguyen", email = "nhviet1009@gmail.com"}, {name = "brightsunshine0917", email = "brightsunshine0917@email.email"}]
+description = "Generate ASCII from images"
+dependencies = ["numpy==2.1.3", "opencv-python==4.10.0.84", "pillow==11.0.0"]
+readme = "README.md"
+requires-python = ">=3.12"
+license = {file = "LICENSE"}
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/brightsunshine0917/ASCII-generator.git"
+
+[tool.setuptools.dynamic]
+version = {attr = "genascii.about.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+neosca = ["data/*"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "B",
+    "F",
+    "SIM",
+    "I",
+    "UP",
+]
+ignore = [
+    "UP038",
+    "B011",
+    "E501",
+]
+
+[tool.ruff]
+line-length = 112
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = true
+
+[tool.ruff.format]
+skip-magic-trailing-comma = false
+line-ending = "auto"
+quote-style = "double"
+indent-style = "space"

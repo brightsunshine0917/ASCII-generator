@@ -1,19 +1,22 @@
-# [PYTHON] ASCII generator
-
-## [22/11/2024] A thank you to the Chinese community
-
-Recently, this repository has been protected and supported by the Chinese community in relation to a copyright issue. A million thanks to Chinese netizens in particular, and the Chinese community in general
-
 ## Introduction
 
 Here is my python source code for ASCII generator. With my code: 
+
 * **Given input image, we could generate ASCII art stored under text format in different languages (.txt)**
 * **Given input image, we could generate ASCII art stored under image formats in different languages (.png, .jpg, ...). In each format, there are 2 options: Black background and white characters, or vice versa**
 * **Given input video, we could generate ASCII art stored under video formats in different languages (.avi, .mp4, ...)**
 * **Video/image outputs could be in grayscale or color format. It is totally up to you**
 
+## Install
+
+```sh
+pip install genascii
+```
+
 ## Multiple Language Conversion
+
 We could generate ASCII art with different alphabets (english, german, french, korean, chinese, japanese, ...). Below are example output:
+
 <p align="center">
   <img src="demo/english_output.jpg" width=800><br/>
   <i>English</i>
@@ -114,10 +117,3 @@ By running the sript **img2img_color.py** or **img2img.py** with different value
   <img src="demo/output_complex_black_200.jpg" width=800><br/>
   <i>Black-background complex-character ASCII output</i>
 </p>
-
-## Requirements
-
-* **python 3.6**
-* **cv2**
-* **PIL** 
-* **numpy**
