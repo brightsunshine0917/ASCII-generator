@@ -1,0 +1,112 @@
+{
+  "chinese": {
+    "font-name": "simsun.ttc",
+    "font-size": 10,
+    "sample_character": "制",
+    "scale": 1,
+    "modes": {
+      "standard": "龘䶑瀰幗獼鑭躙䵹觿䲔釅欄鐮䥯鶒獭鰽襽螻鰱蹦屭繩圇婹歜剛屧磕媿慪像僭堳噞呱棒偁呣塙唑浠唼刻凌咄亟拮俗参坒估这聿布允仫忖玗甴木亪女去凸五圹亐囗弌九人亏产斗丩艹刂彳丬了５丄三亻讠厂丆丨１二宀冖乛一丶、"
+    }
+  },
+  "english": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+    }
+  },
+  "french": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÆæŒœÇçÀàÂâÉéÈèÊêËëÎîÎïÔôÛûÙùŸÿ"
+    }
+  },
+  "general": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "simple": "@%#*+:-:. ",
+      "complex": "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    }
+  },
+  "german": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaÄäBbßCcDdEeFfGgHhIiJjKkLlMmNnOoÖöPpQqRrSsTtUuÜüVvWwXxYyZz"
+    }
+  },
+  "italian": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÀÈàèéìòù"
+    }
+  },
+  "japanese": {
+    "font-name": "arial-unicode.ttf",
+    "font-size": 10,
+    "sample_character": "お",
+    "scale": 1,
+    "modes": {
+      "hiragana": "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん",
+      "katakana": "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン"
+    }
+  },
+  "korean": {
+    "font-name": "arial-unicode.ttf",
+    "font-size": 10,
+    "sample_character": "ㅊ",
+    "scale": 1,
+    "modes": {
+      "standard": "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ"
+    }
+  },
+  "polish": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpRrSsTtUuWwYyZzĄąĘęÓóŁłŃńŻżŚśĆćŹź"
+    }
+  },
+  "portuguese": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzàÀáÁâÂãÃçÇéÉêÊíÍóÓôÔõÕúÚ"
+    }
+  },
+  "russian": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "Ш",
+    "scale": 2,
+    "modes": {
+      "standard": "АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя"
+    }
+  },
+  "spanish": {
+    "font-name": "DejaVuSansMono-Bold.ttf",
+    "font-size": 20,
+    "sample_character": "A",
+    "scale": 2,
+    "modes": {
+      "standard": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÑñáéíóú¡¿"
+    }
+  }
+}

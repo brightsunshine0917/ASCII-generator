@@ -1,5 +1,9 @@
+import json
+
 import numpy as np
-from PIL import Image, ImageFont, ImageDraw, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+from consts import ALPHABETS_PATH, FONT_FOLDER
 
 
 def sort_chars(char_list, font, language):
@@ -9,9 +13,10 @@ def sort_chars(char_list, font, language):
         char_width, char_height = font.getsize("ㅊ")
     elif language == "japanese":
         char_width, char_height = font.getsize("あ")
-    elif language in ["english", "german", "french", "spanish", "italian", "portuguese", "polish"]:
-        char_width, char_height = font.getsize("A")
-    elif language == "russian":
+    elif (
+        language in ["english", "german", "french", "spanish", "italian", "portuguese", "polish"]
+        or language == "russian"
+    ):
         char_width, char_height = font.getsize("A")
     num_chars = min(len(char_list), 100)
     out_width = char_width * len(char_list)
@@ -21,7 +26,7 @@ def sort_chars(char_list, font, language):
     draw.text((0, 0), char_list, fill=0, font=font)
     cropped_image = ImageOps.invert(out_image).getbbox()
     out_image = out_image.crop(cropped_image)
-    brightness = [np.mean(np.array(out_image)[:, 10 * i:10 * (i + 1)]) for i in range(len(char_list))]
+    brightness = [np.mean(np.array(out_image)[:, 10 * i : 10 * (i + 1)]) for i in range(len(char_list))]
     char_list = list(char_list)
     zipped_lists = zip(brightness, char_list)
     zipped_lists = sorted(zipped_lists)
@@ -42,78 +47,23 @@ def sort_chars(char_list, font, language):
 
 
 def get_data(language, mode):
-    if language == "general":
-        from alphabets import GENERAL as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "english":
-        from alphabets import ENGLISH as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "german":
-        from alphabets import GERMAN as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "french":
-        from alphabets import FRENCH as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "italian":
-        from alphabets import ITALIAN as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "polish":
-        from alphabets import POLISH as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "portuguese":
-        from alphabets import PORTUGUESE as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "spanish":
-        from alphabets import SPANISH as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "A"
-        scale = 2
-    elif language == "russian":
-        from alphabets import RUSSIAN as character
-        font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=20)
-        sample_character = "Ш"
-        scale = 2
-    elif language == "chinese":
-        from alphabets import CHINESE as character
-        font = ImageFont.truetype("fonts/simsun.ttc", size=10)
-        sample_character = "制"
-        scale = 1
-    elif language == "korean":
-        from alphabets import KOREAN as character
-        font = ImageFont.truetype("fonts/arial-unicode.ttf", size=10)
-        sample_character = "ㅊ"
-        scale = 1
-    elif language == "japanese":
-        from alphabets import JAPANESE as character
-        font = ImageFont.truetype("fonts/arial-unicode.ttf", size=10)
-        sample_character = "お"
-        scale = 1
-    else:
-        print("Invalid language")
-        return None, None, None, None
-    try:
-        if len(character) > 1:
-            char_list = character[mode]
-        else:
-            char_list = character["standard"]
-    except:
-        print("Invalid mode for {}".format(language))
-        return None, None, None, None
-    if language != "general":
-        char_list = sort_chars(char_list, font, language)
+    with open(ALPHABETS_PATH, "rb") as f:
+        lang_charinfo = json.load(f)
 
-    return char_list, font, sample_character, scale
+    charinfo = lang_charinfo.get(language)
+    if charinfo is None:
+        raise ValueError(f"Invalid language: expected one of {', '.join(lang_charinfo)}, got {language}")
+    font = ImageFont.truetype(FONT_FOLDER / charinfo["font-name"], size=charinfo["font-size"])
+    sample_character = charinfo["sample_character"]
+    scale = charinfo["scale"]
+
+    if mode not in charinfo["modes"]:
+        raise ValueError(
+            f"Invalide mode: expected one of {', '.join(charinfo['modes'])} for {language}, got {mode}"
+        )
+    chars = charinfo["modes"][mode]
+
+    if language != "general":
+        chars = sort_chars(chars, font, language)
+
+    return chars, font, sample_character, scale
