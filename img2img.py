@@ -39,60 +39,45 @@ def get_args():
 
 
 def main(opt):
-    if opt.background == "white":
-        bg_code = 255
-    else:
-        bg_code = 0
+    bg_code = 255 if opt.background == "white" else 0
     char_list, font, sample_character, scale = get_data(opt.language, opt.mode)
     num_chars = len(char_list)
     num_cols = opt.num_cols
+
     image = cv2.imread(opt.input)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     height, width = image.shape
     cell_width = width / opt.num_cols
     cell_height = scale * cell_width
     num_rows = int(height / cell_height)
+
     if num_cols > width or num_rows > height:
-        print("Too many columns or rows. Use default setting")
+        print("Too many columns or rows. Using default setting")
         cell_width = 6
         cell_height = 12
         num_cols = int(width / cell_width)
         num_rows = int(height / cell_height)
+
     char_width, char_height = font.getsize(sample_character)
     out_width = char_width * num_cols
     out_height = scale * char_height * num_rows
     out_image = Image.new("L", (out_width, out_height), bg_code)
     draw = ImageDraw.Draw(out_image)
-    for i in range(num_rows):
-        line = (
-            "".join(
-                [
-                    char_list[
-                        min(
-                            int(
-                                np.mean(
-                                    image[
-                                        int(i * cell_height) : min(int((i + 1) * cell_height), height),
-                                        int(j * cell_width) : min(int((j + 1) * cell_width), width),
-                                    ]
-                                )
-                                / 255
-                                * num_chars
-                            ),
-                            num_chars - 1,
-                        )
-                    ]
-                    for j in range(num_cols)
-                ]
-            )
-            + "\n"
-        )
-        draw.text((0, i * char_height), line, fill=255 - bg_code, font=font)
 
-    if opt.background == "white":
-        cropped_image = ImageOps.invert(out_image).getbbox()
-    else:
-        cropped_image = out_image.getbbox()
+    for rowno in range(num_rows):
+        chars = []
+        for colno in range(num_cols):
+            block = image[
+                int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
+                int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
+            ]
+            avg_brightness = np.mean(block) / 255 * num_chars
+            chars.append(char_list[min(int(avg_brightness), num_chars - 1)])
+        chars.append("\n")
+
+        draw.text((0, rowno * char_height), "".join(chars), fill=255 - bg_code, font=font)
+
+    cropped_image = ImageOps.invert(out_image).getbbox() if opt.background == "white" else out_image.getbbox()
     out_image = out_image.crop(cropped_image)
     out_image.save(opt.output)
 
