@@ -1,5 +1,6 @@
 """
 @author: Viet Nguyen <nhviet1009@gmail.com>
+@author: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
@@ -36,11 +37,11 @@ def get_args():
 
 def main(opt):
     if opt.mode == "simple":
-        CHAR_LIST = "@%#*+=-:. "
+        candidate_chars = "@%#*+=-:. "
     else:
-        CHAR_LIST = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+        candidate_chars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
-    num_chars = len(CHAR_LIST)
+    num_chars = len(candidate_chars)
     num_cols = opt.num_cols
 
     image = cv2.imread(opt.input)
@@ -67,8 +68,8 @@ def main(opt):
                     int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
                 ]
                 avg_brightness = np.mean(block) * num_chars / 255
-                char = CHAR_LIST[min(int(avg_brightness), num_chars - 1)]
-                f.write(char)
+                chosen_char = candidate_chars[min(int(avg_brightness), num_chars - 1)]
+                f.write(chosen_char)
             f.write("\n")
     print(f"Output has been saved to {output_path}")
 

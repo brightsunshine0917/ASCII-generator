@@ -1,5 +1,6 @@
 """
 @author: Viet Nguyen <nhviet1009@gmail.com>
+@author: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
@@ -40,8 +41,8 @@ def get_args():
 
 def main(opt):
     bg_code = 255 if opt.background == "white" else 0
-    char_list, font, sample_character, scale = get_data(opt.language, opt.mode)
-    num_chars = len(char_list)
+    candidate_chars, font, sample_character, scale = get_data(opt.language, opt.mode)
+    num_chars = len(candidate_chars)
     num_cols = opt.num_cols
 
     image = cv2.imread(opt.input)
@@ -65,17 +66,17 @@ def main(opt):
     draw = ImageDraw.Draw(out_image)
 
     for rowno in range(num_rows):
-        chars = []
+        chosen_chars = []
         for colno in range(num_cols):
             block = image[
                 int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
                 int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
             ]
             avg_brightness = np.mean(block) / 255 * num_chars
-            chars.append(char_list[min(int(avg_brightness), num_chars - 1)])
-        chars.append("\n")
+            chosen_chars.append(candidate_chars[min(int(avg_brightness), num_chars - 1)])
+        chosen_chars.append("\n")
 
-        draw.text((0, rowno * char_height), "".join(chars), fill=255 - bg_code, font=font)
+        draw.text((0, rowno * char_height), "".join(chosen_chars), fill=255 - bg_code, font=font)
 
     cropped_image = ImageOps.invert(out_image).getbbox() if opt.background == "white" else out_image.getbbox()
     out_image = out_image.crop(cropped_image)

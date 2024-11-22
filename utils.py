@@ -1,3 +1,8 @@
+"""
+@author: Viet Nguyen <nhviet1009@gmail.com>
+@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+"""
+
 import json
 
 import numpy as np

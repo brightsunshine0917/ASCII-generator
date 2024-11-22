@@ -1,5 +1,6 @@
 """
 @author: Viet Nguyen <nhviet1009@gmail.com>
+@author: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
@@ -27,10 +28,7 @@ def get_args():
 
 
 def main(opt):
-    if opt.background == "white":
-        bg_code = (255, 255, 255)
-    else:
-        bg_code = (0, 0, 0)
+    bg_code = (255, 255, 255) if opt.background == "white" else (0, 0, 0)
     char_list, font, sample_character, scale = get_data(opt.language, opt.mode)
     num_chars = len(char_list)
     num_cols = opt.num_cols
@@ -51,22 +49,19 @@ def main(opt):
     out_height = scale * char_height * num_rows
     out_image = Image.new("RGB", (out_width, out_height), bg_code)
     draw = ImageDraw.Draw(out_image)
-    for i in range(num_rows):
-        for j in range(num_cols):
+    for rowno in range(num_rows):
+        for colno in range(num_cols):
             partial_image = image[
-                int(i * cell_height) : min(int((i + 1) * cell_height), height),
-                int(j * cell_width) : min(int((j + 1) * cell_width), width),
+                int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
+                int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
                 :,
             ]
             partial_avg_color = np.sum(np.sum(partial_image, axis=0), axis=0) / (cell_height * cell_width)
             partial_avg_color = tuple(partial_avg_color.astype(np.int32).tolist())
             char = char_list[min(int(np.mean(partial_image) * num_chars / 255), num_chars - 1)]
-            draw.text((j * char_width, i * char_height), char, fill=partial_avg_color, font=font)
+            draw.text((colno * char_width, rowno * char_height), char, fill=partial_avg_color, font=font)
 
-    if opt.background == "white":
-        cropped_image = ImageOps.invert(out_image).getbbox()
-    else:
-        cropped_image = out_image.getbbox()
+    cropped_image = ImageOps.invert(out_image).getbbox() if opt.background == "white" else out_image.getbbox()
     out_image = out_image.crop(cropped_image)
     out_image.save(opt.output)
 

@@ -1,11 +1,13 @@
 """
 @author: Viet Nguyen <nhviet1009@gmail.com>
+@author: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
+
 import argparse
 
 import cv2
 import numpy as np
-from PIL import Image, ImageFont, ImageDraw, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 def get_args():
