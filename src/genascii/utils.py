@@ -7,9 +7,10 @@ import json
 from collections.abc import Generator
 
 import numpy as np
-from consts import ALPHABETS_PATH, FONT_FOLDER
 from cv2.typing import MatLike
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+from .consts import ALPHABETS_PATH, FONT_FOLDER
 
 
 def sort_chars(char_list, font, language) -> str:
