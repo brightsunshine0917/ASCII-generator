@@ -1,14 +1,13 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
-@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+Orig Author: Viet Nguyen <nhviet1009@gmail.com>
+Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
 
 import cv2
-import numpy as np
 from PIL import Image, ImageDraw, ImageOps
-from utils import get_data, get_size
+from utils import gen_colored_char, get_data, get_size
 
 
 def get_args():
@@ -28,8 +27,8 @@ def get_args():
 
 def main(opt):
     bg_code = (255, 255, 255) if opt.background == "white" else (0, 0, 0)
-    char_list, font, sample_character, scale = get_data(opt.language, opt.mode)
-    num_chars = len(char_list)
+    candidate_chars, font, sample_character, scale = get_data(opt.language, opt.mode)
+    num_chars = len(candidate_chars)
     num_cols = opt.num_cols
     image = cv2.imread(opt.input, cv2.IMREAD_COLOR)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -50,17 +49,19 @@ def main(opt):
     out_height = scale * char_height * num_rows
     out_image = Image.new("RGB", (out_width, out_height), bg_code)
     draw = ImageDraw.Draw(out_image)
-    for rowno in range(num_rows):
-        for colno in range(num_cols):
-            partial_image = image[
-                int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
-                int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
-                :,
-            ]
-            partial_avg_color = np.sum(np.sum(partial_image, axis=0), axis=0) / (cell_height * cell_width)
-            partial_avg_color = tuple(partial_avg_color.astype(np.int32).tolist())
-            char = char_list[min(int(np.mean(partial_image) * num_chars / 255), num_chars - 1)]
-            draw.text((colno * char_width, rowno * char_height), char, fill=partial_avg_color, font=font)
+
+    for char, rowno, colno, color in gen_colored_char(
+        image,
+        candidate_chars,
+        height=height,
+        width=width,
+        cell_width=cell_width,
+        cell_height=cell_height,
+        num_chars=num_chars,
+        num_rows=num_rows,
+        num_cols=num_cols,
+    ):
+        draw.text((colno * char_width, rowno * char_height), char, fill=color, font=font)
 
     cropped_image = ImageOps.invert(out_image).getbbox() if opt.background == "white" else out_image.getbbox()
     out_image = out_image.crop(cropped_image)

@@ -1,14 +1,13 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
-@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+Orig Author: Viet Nguyen <nhviet1009@gmail.com>
+Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
 
 import cv2
-import numpy as np
 from PIL import Image, ImageDraw, ImageOps
-from utils import get_data, get_size
+from utils import gen_rowchars, get_data, get_size
 
 
 def get_args():
@@ -64,18 +63,20 @@ def main(opt):
     out_image = Image.new("L", (out_width, out_height), bg_code)
     draw = ImageDraw.Draw(out_image)
 
-    for rowno in range(num_rows):
-        chosen_chars = []
-        for colno in range(num_cols):
-            block = image[
-                int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
-                int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
-            ]
-            avg_brightness = np.mean(block) / 255 * num_chars
-            chosen_chars.append(candidate_chars[min(int(avg_brightness), num_chars - 1)])
-        chosen_chars.append("\n")
-
-        draw.text((0, rowno * char_height), "".join(chosen_chars), fill=255 - bg_code, font=font)
+    for rowno, rowchars in enumerate(
+        gen_rowchars(
+            image,
+            candidate_chars,
+            height=height,
+            width=width,
+            cell_width=cell_width,
+            cell_height=cell_height,
+            num_chars=num_chars,
+            num_rows=num_rows,
+            num_cols=num_cols,
+        )
+    ):
+        draw.text((0, rowno * char_height), "".join(rowchars), fill=255 - bg_code, font=font)
 
     cropped_image = ImageOps.invert(out_image).getbbox() if opt.background == "white" else out_image.getbbox()
     out_image = out_image.crop(cropped_image)

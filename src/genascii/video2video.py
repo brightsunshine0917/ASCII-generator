@@ -1,6 +1,6 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
-@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+Orig Author: Viet Nguyen <nhviet1009@gmail.com>
+Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
@@ -8,7 +8,7 @@ import argparse
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageOps
-from utils import get_size
+from utils import gen_rowchars, get_size
 
 
 def get_args():
@@ -35,14 +35,14 @@ def get_args():
 
 def main(opt):
     if opt.mode == "simple":
-        CHAR_LIST = "@%#*+=-:. "
+        candidate_chars = "@%#*+=-:. "
     else:
-        CHAR_LIST = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+        candidate_chars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
     bg_code = 255 if opt.background == "white" else 0
     font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=int(10 * opt.scale))
     cap = cv2.VideoCapture(opt.input)
     fps = int(cap.get(cv2.CAP_PROP_FPS)) if opt.fps == 0 else opt.fps
-    num_chars = len(CHAR_LIST)
+    num_chars = len(candidate_chars)
     num_cols = opt.num_cols
     while cap.isOpened():
         flag, frame = cap.read()
@@ -65,31 +65,21 @@ def main(opt):
         out_height = 2 * char_height * num_rows
         out_image = Image.new("L", (out_width, out_height), bg_code)
         draw = ImageDraw.Draw(out_image)
-        for i in range(num_rows):
-            line = (
-                "".join(
-                    [
-                        CHAR_LIST[
-                            min(
-                                int(
-                                    np.mean(
-                                        image[
-                                            int(i * cell_height) : min(int((i + 1) * cell_height), height),
-                                            int(j * cell_width) : min(int((j + 1) * cell_width), width),
-                                        ]
-                                    )
-                                    * num_chars
-                                    / 255
-                                ),
-                                num_chars - 1,
-                            )
-                        ]
-                        for j in range(num_cols)
-                    ]
-                )
-                + "\n"
+
+        for rowno, rowchars in enumerate(
+            gen_rowchars(
+                image,
+                candidate_chars,
+                height=height,
+                width=width,
+                cell_width=cell_width,
+                cell_height=cell_height,
+                num_chars=num_chars,
+                num_rows=num_rows,
+                num_cols=num_cols,
             )
-            draw.text((0, i * char_height), line, fill=255 - bg_code, font=font)
+        ):
+            draw.text((0, rowno * char_height), "".join(rowchars), fill=255 - bg_code, font=font)
 
         if opt.background == "white":
             cropped_image = ImageOps.invert(out_image).getbbox()

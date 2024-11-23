@@ -1,13 +1,13 @@
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
-@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+Orig Author: Viet Nguyen <nhviet1009@gmail.com>
+Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 import argparse
 from pathlib import Path
 
 import cv2
-import numpy as np
+from utils import gen_rowchars
 
 
 def get_args():
@@ -43,7 +43,6 @@ def main(opt):
 
     num_chars = len(candidate_chars)
     num_cols = opt.num_cols
-
     image = cv2.imread(opt.input)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     height, width = image.shape
@@ -61,15 +60,18 @@ def main(opt):
     output_path = Path(opt.output)
     output_path.parent.mkdir(exist_ok=True, parents=True)
     with open(output_path, "w") as f:
-        for rowno in range(num_rows):
-            for colno in range(num_cols):
-                block = image[
-                    int(rowno * cell_height) : min(int((rowno + 1) * cell_height), height),
-                    int(colno * cell_width) : min(int((colno + 1) * cell_width), width),
-                ]
-                avg_brightness = np.mean(block) * num_chars / 255
-                chosen_char = candidate_chars[min(int(avg_brightness), num_chars - 1)]
-                f.write(chosen_char)
+        for rowchars in gen_rowchars(
+            image,
+            candidate_chars,
+            height=height,
+            width=width,
+            cell_width=cell_width,
+            cell_height=cell_height,
+            num_chars=num_chars,
+            num_rows=num_rows,
+            num_cols=num_cols,
+        ):
+            f.write("".join(rowchars))
             f.write("\n")
     print(f"Output has been saved to {output_path}")
 
