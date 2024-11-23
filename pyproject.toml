@@ -22,7 +22,7 @@ version = {attr = "genascii.about.__version__"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-genascii = ["data/*"]
+genascii = ["data/**/*"]
 
 [tool.ruff.lint]
 select = [
