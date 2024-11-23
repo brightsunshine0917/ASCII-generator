@@ -1,3 +1,8 @@
+[![image](https://img.shields.io/pypi/v/genascii.svg)](https://pypi.python.org/pypi/genascii)
+[![image](https://img.shields.io/pypi/l/genascii.svg)](https://github.com/astral-sh/genascii/blob/main/LICENSE)
+[![image](https://img.shields.io/pypi/pyversions/genascii.svg)](https://pypi.python.org/pypi/genascii)
+[![image](https://static.pepy.tech/badge/genascii)](https://pepy.tech/project/genascii)
+
 ## Install
 
 ```sh
