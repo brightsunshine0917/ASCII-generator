@@ -1,0 +1,7 @@
+standard output
+  https://github.com/vietnh1009/ASCII-generator/issues/4
+use logging for 'Too many columns or rows. Using default setting'
+
+multiprocess
+
+remove default value for --input and --output, complain if not provided
