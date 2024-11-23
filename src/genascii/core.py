@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from .consts import ALPHABETS_PATH
+from .consts import ALPHABETS_PATH, FONT_FOLDER
 from .utils import gen_colored_char, gen_rowchars, get_data, get_size
 
 with open(ALPHABETS_PATH, "rb") as f:
@@ -131,7 +131,7 @@ def video2video(opt: argparse.Namespace):
         bg_code = 255 if opt.background == "white" else 0
         mode = "L"
 
-    font = ImageFont.truetype("fonts/DejaVuSansMono-Bold.ttf", size=int(10 * opt.scale))
+    font = ImageFont.truetype(FONT_FOLDER / "DejaVuSansMono-Bold_subset.ttf", size=int(10 * opt.scale))
     cap = cv2.VideoCapture(opt.input)
     fps = int(cap.get(cv2.CAP_PROP_FPS)) if opt.fps == 0 else opt.fps
     num_chars = len(candidate_chars)
