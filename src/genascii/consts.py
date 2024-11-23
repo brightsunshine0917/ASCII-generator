@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-@author: Viet Nguyen <nhviet1009@gmail.com>
-@author: brightsunshine0917 <https://github.com/brightsunshine0917>
+Orig Author: Viet Nguyen <nhviet1009@gmail.com>
+Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
 from pathlib import Path
