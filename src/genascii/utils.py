@@ -3,17 +3,15 @@ Orig Author: Viet Nguyen <nhviet1009@gmail.com>
 Maintainer: brightsunshine0917 <https://github.com/brightsunshine0917>
 """
 
-import json
 from collections.abc import Generator
 
-import numpy as np
-from cv2.typing import MatLike
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-
-from .consts import ALPHABETS_PATH, FONT_FOLDER
+from .consts import FONT_FOLDER
 
 
 def sort_chars(char_list, font, language) -> str:
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageOps
+
     if language == "chinese":
         char_width, char_height = get_size(font, "制")
     elif language == "korean":
@@ -53,9 +51,8 @@ def sort_chars(char_list, font, language) -> str:
     return "".join(result)
 
 
-def get_data(language, mode):
-    with open(ALPHABETS_PATH, "rb") as f:
-        lang_charinfo = json.load(f)
+def get_data(language, mode, lang_charinfo):
+    from PIL import ImageFont
 
     charinfo = lang_charinfo.get(language)
     if charinfo is None:
@@ -76,13 +73,13 @@ def get_data(language, mode):
     return chars, font, sample_character, scale
 
 
-def get_size(font: ImageFont.FreeTypeFont, char: str) -> tuple[float, float]:
+def get_size(font, char: str) -> tuple[float, float]:
     char_bbox = font.getbbox(char)
     return char_bbox[2] - char_bbox[0], char_bbox[3]
 
 
 def gen_rowchars(
-    image: MatLike,
+    image,
     candidate_chars: str,
     *,
     height: float,
@@ -93,6 +90,8 @@ def gen_rowchars(
     num_rows: int,
     num_cols: int,
 ) -> Generator[list[str], None, None]:
+    import numpy as np
+
     row_chars = []
     for rowno in range(num_rows):
         for colno in range(num_cols):
@@ -108,7 +107,7 @@ def gen_rowchars(
 
 
 def gen_colored_char(
-    image: MatLike,
+    image,
     candidate_chars: str,
     *,
     height: float,
@@ -119,6 +118,8 @@ def gen_colored_char(
     num_rows: int,
     num_cols: int,
 ) -> Generator[tuple[str, int, int, tuple], None, None]:
+    import numpy as np
+
     for rowno in range(num_rows):
         for colno in range(num_cols):
             partial_image = image[

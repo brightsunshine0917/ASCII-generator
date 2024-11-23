@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 from pathlib import Path
 
-import cv2
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-
+from .consts import ALPHABETS_PATH
 from .utils import gen_colored_char, gen_rowchars, get_data, get_size
+
+with open(ALPHABETS_PATH, "rb") as f:
+    LANG_CHARINFO = json.load(f)
 
 
 def img2txt(opt: argparse.Namespace):
-    if opt.mode == "simple":
-        candidate_chars = "@%#*+=-:. "
-    else:
-        candidate_chars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    import cv2
+
+    candidate_chars = LANG_CHARINFO["general"]["modes"][opt.mode]
 
     num_chars = len(candidate_chars)
     num_cols = opt.num_cols
@@ -52,12 +52,15 @@ def img2txt(opt: argparse.Namespace):
 
 
 def img2img(opt: argparse.Namespace):
+    import cv2
+    from PIL import Image, ImageDraw, ImageOps
+
     if opt.color:
         bg_code = (255, 255, 255) if opt.background == "white" else (0, 0, 0)
     else:
         bg_code = 255 if opt.background == "white" else 0
 
-    candidate_chars, font, sample_character, scale = get_data(opt.language, opt.mode)
+    candidate_chars, font, sample_character, scale = get_data(opt.language, opt.mode, LANG_CHARINFO)
     num_chars = len(candidate_chars)
     num_cols = opt.num_cols
     image = cv2.imread(opt.input, cv2.IMREAD_COLOR)
@@ -115,10 +118,11 @@ def img2img(opt: argparse.Namespace):
 
 
 def video2video(opt: argparse.Namespace):
-    if opt.mode == "simple":
-        candidate_chars = "@%#*+=-:. "
-    else:
-        candidate_chars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    import cv2
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+    candidate_chars = LANG_CHARINFO["general"]["modes"][opt.mode]
 
     if opt.color:
         bg_code = (255, 255, 255) if opt.background == "white" else (0, 0, 0)
