@@ -41,24 +41,24 @@ def get_args():
 def main(opt):
     bg_code = 255 if opt.background == "white" else 0
     candidate_chars, font, sample_character, scale = get_data(opt.language, opt.mode)
+
     num_chars = len(candidate_chars)
     num_cols = opt.num_cols
-
     image = cv2.imread(opt.input)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     height, width = image.shape
+    char_width, char_height = get_size(font, sample_character)
     cell_width = width / opt.num_cols
-    cell_height = scale * cell_width
+    cell_height = (char_height / char_width) * cell_width
     num_rows = int(height / cell_height)
 
     if num_cols > width or num_rows > height:
         print("Too many columns or rows. Using default setting")
         cell_width = 6
-        cell_height = 12
+        cell_height = (char_height / char_width) * cell_width
         num_cols = int(width / cell_width)
         num_rows = int(height / cell_height)
 
-    char_width, char_height = get_size(font, sample_character)
     out_width = char_width * num_cols
     out_height = scale * char_height * num_rows
     out_image = Image.new("L", (out_width, out_height), bg_code)
