@@ -8,8 +8,7 @@ import argparse
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageOps
-
-from utils import get_data
+from utils import get_data, get_size
 
 
 def get_args():
@@ -44,7 +43,7 @@ def main(opt):
         cell_height = 12
         num_cols = int(width / cell_width)
         num_rows = int(height / cell_height)
-    char_width, char_height = font.getsize(sample_character)
+    char_width, char_height = get_size(font, sample_character)
     out_width = char_width * num_cols
     out_height = scale * char_height * num_rows
     out_image = Image.new("RGB", (out_width, out_height), bg_code)
