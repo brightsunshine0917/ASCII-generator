@@ -6,23 +6,22 @@
 import json
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-
 from consts import ALPHABETS_PATH, FONT_FOLDER
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 def sort_chars(char_list, font, language):
     if language == "chinese":
-        char_width, char_height = font.getsize("制")
+        char_width, char_height = get_size(font, "制")
     elif language == "korean":
-        char_width, char_height = font.getsize("ㅊ")
+        char_width, char_height = get_size(font, "ㅊ")
     elif language == "japanese":
-        char_width, char_height = font.getsize("あ")
+        char_width, char_height = get_size(font, "あ")
     elif (
         language in ["english", "german", "french", "spanish", "italian", "portuguese", "polish"]
         or language == "russian"
     ):
-        char_width, char_height = font.getsize("A")
+        char_width, char_height = get_size(font, "A")
     num_chars = min(len(char_list), 100)
     out_width = char_width * len(char_list)
     out_height = char_height
@@ -72,3 +71,8 @@ def get_data(language, mode):
         chars = sort_chars(chars, font, language)
 
     return chars, font, sample_character, scale
+
+
+def get_size(font: ImageFont.FreeTypeFont, char: str) -> tuple[float, float]:
+    char_bbox = font.getbbox(char)
+    return char_bbox[2] - char_bbox[0], char_bbox[3]
